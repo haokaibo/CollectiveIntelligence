@@ -2,7 +2,7 @@ import os
 import unittest
 
 import logging
-from recommend.recommendations import critics, sim_distance, sim_pearson, topMatches
+from recommend.recommendations import critics, sim_distance, sim_pearson, topMatches, getRecommendations, transformPrefs
 
 
 class RecommendationsTest(unittest.TestCase):
@@ -17,16 +17,30 @@ class RecommendationsTest(unittest.TestCase):
 
     def test_sim_distance(self):
         r = sim_distance(critics, 'Lisa Rose', 'Gene Seymour')
-        self.assertEqual(0.14814814814814814, r)
+        self.assertEqual(0.15, r)
 
     def test_sim_pearson(self):
         r = sim_pearson(critics, 'Lisa Rose', 'Gene Seymour')
-        self.assertEqual(0.39605901719066977, r)
+        self.assertEqual(0.4, r)
 
     def test_topMatches_with_sim_pearson_method(self):
         r = topMatches(critics, 'Toby', n=3)
         self.assertEqual(
-            "[(0.9912407071619299, 'Lisa Rose'), (0.9244734516419049, 'Mick LaSalle'), (0.8934051474415647, 'Claudia Puig')]",
+            "[(0.99, 'Lisa Rose'), (0.92, 'Mick LaSalle'), (0.89, 'Claudia Puig')]",
+            str(r))
+
+    def test_getRecommendations_with_sim_pearson_method(self):
+        pass
+        r = getRecommendations(critics, 'Toby')
+        self.assertEqual(
+            "[(3.35, 'The Night Listener'), (2.83, 'Lady in the Water'), (2.53, 'Just My Luck')]",
+            str(r))
+
+    def test_getSimilarMovies(self):
+        movies = transformPrefs(critics)
+        r = topMatches(movies, 'Superman Returns')
+        self.assertEqual(
+            "[(0.66, 'You, Me and Dupree'), (0.49, 'Lady in the Water'), (0.11, 'Snakes on a Plane'), (-0.18, 'The Night Listener'), (-0.42, 'Just My Luck')]",
             str(r))
 
 
