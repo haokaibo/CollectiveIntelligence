@@ -2,6 +2,8 @@
 # set of movies
 from math import sqrt
 
+import logging
+
 from constants import FLOAT_PRECISION
 
 critics = {'Lisa Rose': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
@@ -157,3 +159,24 @@ def getRecommendedItems(prefs, itemMatch, user):
     rankings.sort()
     rankings.reverse()
     return rankings
+
+
+def loadMovieLens(path='/recommend/test/movielens'):
+    # Get movie titles
+    movies = {}
+    for line in open(path + '/movies.csv'):
+        (id, title) = line.split(',')[0:2]
+        movies[id] = title
+
+    # Load data
+    prefs = {}
+    i = 0
+    for line in open(path + '/ratings.csv'):
+        i += 1
+        if i == 1:
+            continue
+        (user, movieid, rating, ts) = line.split(',')
+        prefs.setdefault(user, {})
+        prefs[user][movies[movieid]] = float(rating)
+    logging.info("load %d records from ratings.csv" % i)
+    return prefs
