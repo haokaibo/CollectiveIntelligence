@@ -161,7 +161,7 @@ def getRecommendedItems(prefs, itemMatch, user):
     return rankings
 
 
-def loadMovieLens(path='/recommend/test/movielens'):
+def loadMovieLens(path='/recommend/test_data/movielens'):
     # Get movie titles
     movies = {}
     for line in open(path + '/movies.csv'):

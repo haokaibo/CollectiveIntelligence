@@ -3,17 +3,12 @@ import unittest
 
 import logging
 
-import recommend
-from recommend import recommendations
 from recommend.recommendations import *
-
-import pydelicious
-
 
 class RecommendationsTest(unittest.TestCase):
     def setUp(self):
         logging.basicConfig(level=logging.INFO)
-        self.base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test')
+        self.base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_data')
         if not os.path.exists(self.base_dir):
             os.makedirs(self.base_dir)
 
