@@ -60,3 +60,7 @@ class GenerateFeedVectorTest(unittest.TestCase):
         clust = clusters.hcluster(data)
         logging.info(clust)
         clusters.printclust(clust, labels=blognames)
+        output_img_path =  os.path.join(self.base_dir, 'blogclust.jpg')
+        clusters.drawdendrogram(clust, blognames, jpeg=output_img_path)
+
+
