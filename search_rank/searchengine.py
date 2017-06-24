@@ -29,7 +29,8 @@ class crawler:
             cur = self.con.execute(
                 "insert into %s (%s) values ('%s')" % (table, field, value))
             return cur.lastrowid
-        else: return res[0]
+        else:
+            return res[0]
 
     # Index an individual page
     def addtoindex(self, url, soup):
@@ -84,16 +85,14 @@ class crawler:
     def addlinkref(self, urlFrom, urlTo, linkText):
         pass
 
-    # Starting with a list of pages, do a breadth
-    # first search to the given depth, indexing pages
-    # as we go
-    def crawl(self, pages, depth=2):
-        pass
 
     # Create the database tables
     def createindextables(self):
         pass
 
+    # Starting with a list of pages, do a breadth
+    # first search to the given depth, indexing pages
+    # as we go
     def crawl(self, pages, depth=2):
         for i in range(depth):
             newpages = set()
@@ -134,3 +133,46 @@ class crawler:
         self.con.execute('create index urltoidx on link(toid)')
         self.con.execute('create index urlfromidx on link(fromid)')
         self.dbcommit()
+
+
+class searcher:
+    def __init__(self, dbname):
+        self.con = sqlite.connect(dbname)
+
+    def __del__(self):
+        self.con.close()
+
+    def getmatchrows(self, q):
+        # Strings to build the query
+        fieldlist = 'w0.urlid'
+        tablelist = ''
+        clauselist = ''
+        wordids = []
+
+        # Split the words by spaces
+        words = q.lower().split(' ')
+        tablenumber = 0
+
+        for word in words:
+            # Get the word ID
+            wordrow = self.con.execute(
+                "select rowid from wordlist where word='%s'" % word).fetchone()
+            print(wordrow)
+            if wordrow != None:
+                wordid = wordrow[0]
+                wordids.append(wordid)
+                if tablenumber > 0:
+                    tablelist += ','
+                    clauselist += ' and '
+                    clauselist += 'w%d.urlid=w%d.urlid and ' % (tablenumber - 1, tablenumber)
+                fieldlist += ',w%d.location' % tablenumber
+                tablelist += 'wordlocation w%d' % tablenumber
+                clauselist += 'w%d.wordid=%d' % (tablenumber, wordid)
+                tablenumber += 1
+
+        # Create the query from the separate parts
+        fullquery = 'select %s from %s where %s' % (fieldlist, tablelist, clauselist)
+        cur = self.con.execute(fullquery)
+        rows = [row for row in cur]
+
+        return rows, wordids
