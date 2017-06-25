@@ -167,8 +167,6 @@ class crawler:
             self.dbcommit()
 
 
-
-
 class searcher:
     def __init__(self, dbname):
         self.con = sqlite.connect(dbname)
@@ -234,6 +232,8 @@ class searcher:
         for (score, urlid) in rankedscores[0:10]:
             print('%f\t%s' % (score, self.geturlname(urlid)))
 
+        return wordids, [r[1] for r in rankedscores[0: 10]]
+
     def normalizescores(self, scores, smallIsBetter=0):
         vsmall = 0.00001  # Avoid division by zero errors
 
@@ -278,8 +278,8 @@ class searcher:
 
     def pagerankscore(self, rows):
         pageranks = dict([(row[0], self.con.execute('select score from pagerank where \
-                          urlid = % d' % row[0]).fetchone( )[0]) for row in rows])
-        normalizedscores =self.normalizescores(pageranks)
+                          urlid = % d' % row[0]).fetchone()[0]) for row in rows])
+        normalizedscores = self.normalizescores(pageranks)
         return normalizedscores
 
     def linktextscore(self, rows, wordids):
