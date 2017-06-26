@@ -4,6 +4,9 @@ from BeautifulSoup import *
 from urlparse import urljoin
 from pysqlite2 import dbapi2 as sqlite
 
+import nn
+mynet=nn.searchnet('nn.db')
+
 # Create a list of words to ignore
 ignorewords = set(['the', 'of', 'to', 'and', 'a', 'in', 'is', 'it'])
 
@@ -296,3 +299,11 @@ class searcher:
         normalizedscores = self.normalizescores(linkscores)
 
         return normalizedscores
+
+    def nnscore(self, rows, wordids):
+
+        # Get unique URL IDs as an ordered list
+        urlids = [urlid for urlid in set([row[0] for row in rows])]
+        nnres = mynet.getresult(wordids, urlids)
+        scores = dict([(urlids[i], nnres[i]) for i in range(len(urlids))])
+        return self.normalizescores(scores)
