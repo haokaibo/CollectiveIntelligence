@@ -25,12 +25,14 @@ class decisionnode:
         self.tb = tb
         self.fb = fb
 
+
 class DecisionTree:
     def __init__(self):
         pass
 
     # Divides a set on a specific column. Can handle numeric
     # or nominal values
+    @staticmethod
     def divideset(rows, column, value):
 
         # Make a function that tells us if a row is in
@@ -45,3 +47,46 @@ class DecisionTree:
         set2 = [row for row in rows if not split_function(row)]
         return (set1, set2)
 
+    # Create counts of possible results (the last column of
+    # each row is the result)
+    @staticmethod
+    def uniquecounts(rows):
+        results = {}
+
+        for row in rows:
+            # The result is the last column
+            r = row[len(row) - 1]
+            if r not in results: results[r] = 0
+            results[r] += 1
+
+        return results
+
+    # Probability that a randomly placed item will
+    # be in the wrong category
+    @staticmethod
+    def giniimpurity(rows):
+        total = len(rows)
+
+        counts = DecisionTree.uniquecounts(rows)
+        imp = 0
+        for k1 in counts:
+            p1 = float(counts[k1]) / total
+            for k2 in counts:
+                if k1 == k2: continue
+                p2 = float(counts[k2]) / total
+                imp += p1 * p2
+        return imp
+
+    # Entropy is the sum of p(x)log(p(x)) across all
+    # the different possible results
+    @staticmethod
+    def entropy(rows):
+        from math import log
+        log2 = lambda x: log(x) / log(2)
+        results = DecisionTree.uniquecounts(rows)
+        # Now calculate the entropy
+        ent = 0.0
+        for r in results.keys():
+            p = float(results[r]) / len(rows)
+            ent = ent - p * log2(p)
+        return ent

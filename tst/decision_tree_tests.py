@@ -19,6 +19,19 @@ class DecisionTreeTest(unittest.TestCase):
     def testDivideSet(self):
         logging.info(DecisionTree.divideset(my_data, 2, 'yes'))
 
+    def testGiniimpurity(self):
+        logging.info(DecisionTree.giniimpurity(my_data))
+
+    def testEntropy(self):
+        logging.info(DecisionTree.entropy(my_data))
+
+    def testDivideSet2(self):
+        set1, set2 = DecisionTree.divideset(my_data, 2, 'yes')
+        logging.info("Entorpy of set1: %s" % DecisionTree.entropy(set1))
+        logging.info("Ginimpurity of set1: %s" % DecisionTree.giniimpurity(set1))
+
+
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
