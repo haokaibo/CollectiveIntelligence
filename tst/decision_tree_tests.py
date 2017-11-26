@@ -43,5 +43,13 @@ class DecisionTreeTest(unittest.TestCase):
         r = classify(['(direct)', 'USA', 'yes', 5], tree)
         logging.info(r)
 
+    def testPrune(self):
+        tree = buildtree(my_data)
+        prune(tree, 0.1)
+        DecisionTree.printtree(tree)
+
+        prune(tree, 1.0)
+        DecisionTree.printtree(tree)
+
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
