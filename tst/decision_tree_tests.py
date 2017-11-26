@@ -20,15 +20,19 @@ class DecisionTreeTest(unittest.TestCase):
         logging.info(DecisionTree.divideset(my_data, 2, 'yes'))
 
     def testGiniimpurity(self):
-        logging.info(DecisionTree.giniimpurity(my_data))
+        logging.info(giniimpurity(my_data))
 
     def testEntropy(self):
-        logging.info(DecisionTree.entropy(my_data))
+        logging.info(entropy(my_data))
 
     def testDivideSet2(self):
         set1, set2 = DecisionTree.divideset(my_data, 2, 'yes')
         logging.info("Entorpy of set1: %s" % DecisionTree.entropy(set1))
         logging.info("Ginimpurity of set1: %s" % DecisionTree.giniimpurity(set1))
+
+    def testBuildTree(self):
+        tree = buildtree(my_data)
+        DecisionTree.printtree(tree)
 
 
 
