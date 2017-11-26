@@ -34,6 +34,9 @@ class DecisionTreeTest(unittest.TestCase):
         tree = buildtree(my_data)
         DecisionTree.printtree(tree)
 
+    def testDrawTree(self):
+        tree = buildtree(my_data)
+        DecisionTree.drawtree(tree, jpeg='treeview.jpg')
 
 
 

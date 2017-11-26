@@ -1,3 +1,5 @@
+from PIL import Image,ImageDraw
+
 my_data = [['slashdot', 'USA', 'yes', 18, 'None'],
            ['google', 'France', 'yes', 23, 'Premium'],
            ['digg', 'USA', 'yes', 24, 'Basic'],
@@ -59,6 +61,48 @@ class DecisionTree:
             # Print the branches
             DecisionTree.printtree(tree.tb, indent, indent + 'T->')
             DecisionTree.printtree(tree.fb, indent, indent + 'F->')
+
+    @staticmethod
+    def getwidth(tree):
+        if tree.tb == None and tree.fb == None: return 1
+        return DecisionTree.getwidth(tree.tb) + DecisionTree.getwidth(tree.fb)
+
+    @staticmethod
+    def getdepth(tree):
+        if tree.tb == None and tree.fb == None: return 0
+        return max(DecisionTree.getdepth(tree.tb), DecisionTree.getdepth(tree.fb)) + 1
+
+    @staticmethod
+    def drawtree(tree, jpeg='tree.jpg'):
+        w = DecisionTree.getwidth(tree) * 100
+
+        h = DecisionTree.getdepth(tree) * 100 + 120
+        img = Image.new('RGB', (w, h), (255, 255, 255))
+        draw = ImageDraw.Draw(img)
+        DecisionTree.drawnode(draw, tree, w / 2, 20)
+        img.save(jpeg, 'JPEG')
+
+
+    @staticmethod
+    def drawnode(draw, tree, x, y):
+        if tree.results == None:
+            # Get the width of each branch
+            w1 = DecisionTree.getwidth(tree.fb) * 100
+            w2 = DecisionTree.getwidth(tree.tb) * 100
+            # Determine the total space required by this node
+            left = x - (w1 + w2) / 2
+            right = x + (w1 + w2) / 2
+            # Draw the condition string
+            draw.text((x - 20, y - 10), str(tree.col) + ':' + str(tree.value), (0, 0, 0))
+            # Draw links to the branches
+            draw.line((x, y, left + w1 / 2, y + 100), fill=(255, 0, 0))
+            draw.line((x, y, right - w2 / 2, y + 100), fill=(255, 0, 0))
+            # Draw the branch nodes
+            DecisionTree.drawnode(draw, tree.fb, left + w1 / 2, y + 100)
+            DecisionTree.drawnode(draw, tree.tb, right - w2 / 2, y + 100)
+        else:
+            txt = ' \n'.join(['%s:%d' % v for v in tree.results.items()])
+            draw.text((x - 20, y), txt, (0, 0, 0))
 
 
 # Create counts of possible results (the last column of
