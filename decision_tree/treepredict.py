@@ -82,7 +82,6 @@ class DecisionTree:
         DecisionTree.drawnode(draw, tree, w / 2, 20)
         img.save(jpeg, 'JPEG')
 
-
     @staticmethod
     def drawnode(draw, tree, x, y):
         if tree.results == None:
@@ -104,7 +103,23 @@ class DecisionTree:
             txt = ' \n'.join(['%s:%d' % v for v in tree.results.items()])
             draw.text((x - 20, y), txt, (0, 0, 0))
 
-
+def classify(observation, tree):
+    if tree.results != None:
+        return tree.results
+    else:
+        v = observation[tree.col]
+        branch = None
+        if isinstance(v, int) or isinstance(v, float):
+            if v >= tree.value:
+                branch = tree.tb
+            else:
+                branch = tree.fb
+        else:
+            if v == tree.value:
+                branch = tree.tb
+            else:
+                branch = tree.fb
+    return classify(observation, branch)
 # Create counts of possible results (the last column of
 # each row is the result)
 def uniquecounts(rows):

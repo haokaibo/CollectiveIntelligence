@@ -27,8 +27,8 @@ class DecisionTreeTest(unittest.TestCase):
 
     def testDivideSet2(self):
         set1, set2 = DecisionTree.divideset(my_data, 2, 'yes')
-        logging.info("Entorpy of set1: %s" % DecisionTree.entropy(set1))
-        logging.info("Ginimpurity of set1: %s" % DecisionTree.giniimpurity(set1))
+        logging.info("Entorpy of set1: %s" % entropy(set1))
+        logging.info("Ginimpurity of set1: %s" % giniimpurity(set1))
 
     def testBuildTree(self):
         tree = buildtree(my_data)
@@ -38,7 +38,10 @@ class DecisionTreeTest(unittest.TestCase):
         tree = buildtree(my_data)
         DecisionTree.drawtree(tree, jpeg='treeview.jpg')
 
-
+    def testClassify(self):
+        tree = buildtree(my_data)
+        r = classify(['(direct)', 'USA', 'yes', 5], tree)
+        logging.info(r)
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
