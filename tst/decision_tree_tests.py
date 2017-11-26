@@ -51,5 +51,12 @@ class DecisionTreeTest(unittest.TestCase):
         prune(tree, 1.0)
         DecisionTree.printtree(tree)
 
+    def testMdclassify(self):
+        tree = buildtree(my_data)
+        r = mdclassify(['google', None, 'yes', None], tree)
+        logging.info(r)
+        r = mdclassify(['google', 'France', None, None], tree)
+        logging.info(r)
+
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

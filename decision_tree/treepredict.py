@@ -1,4 +1,4 @@
-from PIL import Image,ImageDraw
+from PIL import Image, ImageDraw
 
 my_data = [['slashdot', 'USA', 'yes', 18, 'None'],
            ['google', 'France', 'yes', 23, 'Premium'],
@@ -103,6 +103,7 @@ class DecisionTree:
             txt = ' \n'.join(['%s:%d' % v for v in tree.results.items()])
             draw.text((x - 20, y), txt, (0, 0, 0))
 
+
 def classify(observation, tree):
     if tree.results != None:
         return tree.results
@@ -120,6 +121,8 @@ def classify(observation, tree):
             else:
                 branch = tree.fb
     return classify(observation, branch)
+
+
 # Create counts of possible results (the last column of
 # each row is the result)
 def uniquecounts(rows):
@@ -197,6 +200,7 @@ def buildtree(rows, scoref=entropy):
     else:
         return decisionnode(results=uniquecounts(rows))
 
+
 def prune(tree, mingain):
     # If the branches aren't leaves, then prune them
     if tree.tb.results == None:
@@ -219,3 +223,32 @@ def prune(tree, mingain):
             # Merge the branches
             tree.tb, tree.fb = None, None
             tree.results = uniquecounts(tb + fb)
+
+
+def mdclassify(observation, tree):
+    if tree.results != None:
+        return tree.results
+    else:
+        v = observation[tree.col]
+    if v == None:
+        tr, fr = mdclassify(observation, tree.tb), mdclassify(observation, tree.fb)
+        tcount = sum(tr.values())
+        fcount = sum(fr.values())
+        tw = float(tcount) / (tcount + fcount)
+        fw = float(fcount) / (tcount + fcount)
+        result = {}
+        for k, v in tr.items(): result[k] = v * tw
+        for k, v in fr.items(): result[k] = v * fw
+        return result
+    else:
+        if isinstance(v, int) or isinstance(v, float):
+            if v >= tree.value:
+                branch = tree.tb
+            else:
+                branch = tree.fb
+        else:
+            if v == tree.value:
+                branch = tree.tb
+            else:
+                branch = tree.fb
+        return mdclassify(observation, branch)
