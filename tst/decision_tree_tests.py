@@ -1,9 +1,11 @@
+import csv
 import os
 import unittest
 
 import logging
 
 from decision_tree.treepredict import *
+from decision_tree.zillow import *
 
 
 class DecisionTreeTest(unittest.TestCase):
@@ -57,6 +59,17 @@ class DecisionTreeTest(unittest.TestCase):
         logging.info(r)
         r = mdclassify(['google', 'France', None, None], tree)
         logging.info(r)
+
+    def testGetpricelist(self):
+        zillow_path = os.path.join(self.base_dir, 'zillow')
+        housedata = getpricelist(os.path.join(zillow_path, 'addresslist.txt'))
+        valid_housedata = [row for row in housedata if row is not None]
+        # housedata_filepath = os.path.join(zillow_path, 'housedata.csv')
+        # housedata_file = open(housedata_filepath, 'w')
+        # wr = csv.writer(housedata_file)
+        housetree = buildtree(valid_housedata, scoref=variance)
+        DecisionTree.drawtree(housetree, os.path.join(zillow_path, 'housetree.jpg'))
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

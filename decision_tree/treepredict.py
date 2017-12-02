@@ -256,7 +256,12 @@ def mdclassify(observation, tree):
 
 def variance(rows):
     if len(rows) == 0: return 0
-    data = [float(row[len(row) - 1]) for row in rows]
+    valid_rows = []
+    for row in rows:
+        if row is not None:
+            valid_rows.append(row)
+
+    data = [float(row[len(row) - 1]) for row in valid_rows]
     mean = sum(data) / len(data)
     variance = sum([(d - mean) ** 2 for d in data]) / len(data)
     return variance
