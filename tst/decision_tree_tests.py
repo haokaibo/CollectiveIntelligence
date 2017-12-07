@@ -6,7 +6,7 @@ import logging
 
 from decision_tree.treepredict import *
 from decision_tree.zillow import *
-
+from decision_tree.hotornot import *
 
 class DecisionTreeTest(unittest.TestCase):
     def setUp(self):
@@ -70,6 +70,16 @@ class DecisionTreeTest(unittest.TestCase):
         housetree = buildtree(valid_housedata, scoref=variance)
         DecisionTree.drawtree(housetree, os.path.join(zillow_path, 'housetree.jpg'))
 
+    def testHotornot(self):
+        l1 = getrandomratings(500)
+        len(l1)
+
+        pdata = getpeopledata(l1)
+        logging.info(pdata[0])
+
+        hottree = buildtree(pdata, scoref=variance)
+        prune(hottree)
+        DecisionTree.drawtree(hottree, os.path.join((self.base_dir, 'hotornot', 'hosttree.jpg')))
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
