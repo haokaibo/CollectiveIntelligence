@@ -83,3 +83,9 @@ class BuildingPriceModelTest(unittest.TestCase):
         data = numpredict.wineset2()
         logging.info("knn3=%f" % numpredict.crossvalidate(numpredict.knnestimate, data))
         logging.info("weightedknn=%f" % numpredict.crossvalidate(numpredict.weightedknn, data))
+
+    def testRescale(self):
+        data = numpredict.wineset2()
+        sdata=numpredict.rescale(data, [10, 10, 0, 0.5])
+        logging.info("knn3=%f" % numpredict.crossvalidate(numpredict.knnestimate, sdata))
+        logging.info("weightedknn=%f" % numpredict.crossvalidate(numpredict.weightedknn, sdata))
