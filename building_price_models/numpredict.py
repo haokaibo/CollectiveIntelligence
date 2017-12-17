@@ -97,3 +97,44 @@ def weightedknn(data, vec1, k=5, weightf=gaussian):
         totalweight += weight
     avg = avg / totalweight
     return avg
+
+
+def dividedata(data, test=0.05):
+    trainset = []
+    testset = []
+    for row in data:
+        if random() < test:
+            testset.append(row)
+        else:
+            trainset.append(row)
+    return trainset, testset
+
+
+def testalgorithm(algf, trainset, testset):
+    error = 0.0
+    for row in testset:
+        guess = algf(trainset, row['input'])
+        error += (row['result'] - guess) ** 2
+    return error / len(testset)
+
+
+def crossvalidate(algf, data, trials=100, test=0.05):
+    error = 0.0
+    for i in range(trials):
+        trainset, testset = dividedata(data, test)
+        error += testalgorithm(algf, trainset, testset)
+    return error / trials
+
+
+def wineset2():
+    rows = []
+    for i in range(300):
+        rating = random() * 50 + 50
+        age = random() * 50
+        aisle = float(randint(1, 20))
+        bottlesize = [375.0, 750.0, 1500.0, 3000.0][randint(0, 3)]
+        price = wineprice(rating, age)
+        price *= (bottlesize / 750)
+        price *= (random() * 0.9 + 0.2)
+        rows.append({'input': (rating, age, aisle, bottlesize), 'result': price})
+    return rows
