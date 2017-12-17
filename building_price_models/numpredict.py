@@ -80,3 +80,20 @@ def substractweight(dist, const=1.0):
 
 def gaussian(dist, sigma=1.0):
     return math.e ** (-dist ** 2 / (2 * sigma ** 2))
+
+
+def weightedknn(data, vec1, k=5, weightf=gaussian):
+    # Get distances
+    dlist = getdistances(data, vec1)
+    avg = 0.0
+    totalweight = 0.0
+
+    # Get weighted average
+    for i in range(k):
+        dist = dlist[i][0]
+        idx = dlist[i][1]
+        weight = weightf(dist)
+        avg += weight * data[idx]['result']
+        totalweight += weight
+    avg = avg / totalweight
+    return avg

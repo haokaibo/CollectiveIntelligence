@@ -51,3 +51,7 @@ class BuildingPriceModelTest(unittest.TestCase):
         logging.info(numpredict.gaussian(0.1))
         logging.info(numpredict.gaussian(1.0))
         logging.info(numpredict.gaussian(3.0))
+
+    def testWeightedknn(self):
+        data = numpredict.wineset1()
+        logging.info(numpredict.weightedknn(data, (99.5, 5.0)))
