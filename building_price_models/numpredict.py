@@ -78,7 +78,7 @@ def substractweight(dist, const=1.0):
         return const - dist
 
 
-def gaussian(dist, sigma=1.0):
+def gaussian(dist, sigma=10.0):
     return math.e ** (-dist ** 2 / (2 * sigma ** 2))
 
 

@@ -78,3 +78,8 @@ class BuildingPriceModelTest(unittest.TestCase):
             return numpredict.weightedknn(d, v, weightf=numpredict.inverseweight)
 
         logging.info("knninverse=%f", numpredict.crossvalidate(knniverse, data))
+
+    def testCrossvalidate_with_wineset2(self):
+        data = numpredict.wineset2()
+        logging.info("knn3=%f" % numpredict.crossvalidate(numpredict.knnestimate, data))
+        logging.info("weightedknn=%f" % numpredict.crossvalidate(numpredict.weightedknn, data))
