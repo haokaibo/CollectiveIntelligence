@@ -38,3 +38,16 @@ class BuildingPriceModelTest(unittest.TestCase):
         logging.info(numpredict.knnestimate(data, (99.0, 5.0)))
         logging.info(numpredict.wineprice(99.0, 5.0))
         logging.info(numpredict.knnestimate(data, (95.0, 3.0), k=1))
+
+    def testSubstractweight(self):
+        logging.info(numpredict.substractweight(0.1))
+        logging.info(numpredict.substractweight(1))
+
+    def testInverseweight(self):
+        logging.info(numpredict.inverseweight(0.1))
+        logging.info(numpredict.inverseweight(1))
+
+    def testGaussian(self):
+        logging.info(numpredict.gaussian(0.1))
+        logging.info(numpredict.gaussian(1.0))
+        logging.info(numpredict.gaussian(3.0))
