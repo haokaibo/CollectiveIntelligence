@@ -146,3 +146,20 @@ def rescale(data, scale):
         scaled = [scale[i] * row['input'][i] for i in range(len(scale))]
         scaleddata.append({'input': scaled, 'result': row['result']})
     return scaleddata
+
+
+def createcostfunction(algf, data):
+    def costf(scale):
+        sdata = rescale(data, scale)
+        return crossvalidate(algf, sdata, trials=10)
+
+    return costf
+
+
+def wineset3():
+    rows = wineset1()
+    for row in rows:
+        if random() < 0.5:
+            # Wine was bought at a discount store
+            row['result'] *= 0.6
+    return rows
