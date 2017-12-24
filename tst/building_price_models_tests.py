@@ -86,7 +86,7 @@ class BuildingPriceModelTest(unittest.TestCase):
 
     def testRescale(self):
         data = numpredict.wineset2()
-        sdata=numpredict.rescale(data, [10, 10, 0, 0.5])
+        sdata = numpredict.rescale(data, [10, 10, 0, 0.5])
         logging.info("knn3=%f" % numpredict.crossvalidate(numpredict.knnestimate, sdata))
         logging.info("weightedknn=%f" % numpredict.crossvalidate(numpredict.weightedknn, sdata))
 
@@ -95,3 +95,14 @@ class BuildingPriceModelTest(unittest.TestCase):
         logging.info("wine price=%f" % numpredict.wineprice(99.0, 20.0))
         logging.info("weightedknn=%f" % numpredict.weightedknn(data, [99.0, 20.0]))
         logging.info("crossvalidate=%f" % numpredict.crossvalidate(numpredict.weightedknn, data))
+
+    def testProbguess(self):
+        data = numpredict.wineset3()
+        ranges = [[40, 80], [80, 120], [120, 1000], [30, 120]]
+        for r in ranges:
+            logging.info(
+                "Probability in %d to %d is %f" % (r[0], r[1], numpredict.probguess(data, [99, 20], r[0], r[1])))
+
+    def testCumulativegrph(self):
+        data = numpredict.wineset3()
+        numpredict.cumulativegraph(data, (1, 1), 60)

@@ -1,6 +1,9 @@
 from random import random, randint
 import math
 
+from matplotlib.pyplot import plot, show
+from numpy.ma import arange, array
+
 
 def wineprice(rating, age):
     peak_age = rating - 50
@@ -163,3 +166,32 @@ def wineset3():
             # Wine was bought at a discount store
             row['result'] *= 0.6
     return rows
+
+
+def probguess(data, vec1, low, high, k=5, weightf=gaussian):
+    dlist = getdistances(data, vec1)
+    nweight = 0.0
+    tweight = 0.0
+
+    for i in range(k):
+        dist = dlist[i][0]
+        idx = dlist[i][1]
+        weight = weightf(dist)
+        v = data[idx]['result']
+        # Is this point in the range?
+        if v >= low and v <= high:
+            nweight += weight
+        tweight += weight
+
+    if tweight == 0: return 0
+
+    # The probability is the weights in the range
+    # divided by all the weights
+    return nweight / tweight
+
+
+def cumulativegraph(data, vec1, high, k=5, weightf=gaussian):
+    t1 = arange(0.0, high, 0.1)
+    cprob = array([probguess(data, vec1, 0, v, k, weightf) for v in t1])
+    plot(t1, cprob)
+    show()
