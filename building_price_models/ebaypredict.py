@@ -118,3 +118,22 @@ def getItem(itemID):
         attributes[attID] = attValue
     result['attributes'] = attributes
     return result
+
+
+def makeLaptopDataset():
+    searchResults = doSearch('laptop', categoryID=51148)
+    result = []
+    for r in searchResults:
+        item = getItem(r[0])
+        att = item['attributes']
+        try:
+            data = (float(att['12']), float(att['26444']),
+                    float(att['26446']), float(att['25710']),
+                    float(item['feedback'])
+                    )
+            entry = {'input': data, 'result': float(item['price'])}
+            result.append(entry)
+        except:
+            print("%s failed." % item['title'])
+
+    return result

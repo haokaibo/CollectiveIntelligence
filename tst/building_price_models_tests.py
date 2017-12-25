@@ -3,7 +3,7 @@ import unittest
 
 import os
 
-from building_price_models import numpredict
+from building_price_models import numpredict, ebaypredict
 
 
 class BuildingPriceModelTest(unittest.TestCase):
@@ -110,3 +110,11 @@ class BuildingPriceModelTest(unittest.TestCase):
     def testProbabilitygraph(self):
         data = numpredict.wineset3()
         numpredict.probabilitygraph(data, (1, 1), 100)
+
+    def testMakeLaptopDataset(self):
+        set1=ebaypredict.makeLaptopDataset()
+        # RAM, processor speed, screen size, hard drive size, feedback score
+        numpredict.knnestimate(set1, (512, 1000, 14, 40, 1000))
+        numpredict.knnestimate(set1, (1024, 1000, 14, 40, 1000))
+        numpredict.knnestimate(set1, (1024, 1000, 14, 60, 0))
+        numpredict.knnestimate(set1, (1024, 2000, 14, 40, 1000))
