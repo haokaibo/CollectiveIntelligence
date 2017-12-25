@@ -90,3 +90,31 @@ def getCategory(query='', parentID=None, siteID='0'):
         name = getSingleValue(node, 'CategoryName')
         if name.lower().find(lquery) != -1:
             print("%s, %s" % (catid, name))
+
+
+def getItem(itemID):
+    xml = "<?xml version='1.0' encoding='utf-8'?>" + \
+          "<GetItemRequest xmlns=\"urn:ebay:apis:eBLBaseComponents\">" + \
+          "<RequesterCredentials><eBayAuthToken>" + \
+          userToken + \
+          "</eBayAuthToken></RequesterCredentials>" + \
+          "<ItemID>" + str(itemID) + "</ItemID>" + \
+          "<DetailLevel>ItemReturnAttributes</DetailLevel>" + \
+          "</GetItemRequest>"
+    data = sendRequest('GetItem', xml)
+    result = {}
+    response = parseString(data)
+    result['title'] = getSingleValue(response, 'Title')
+    sellingStatusNode = response.getElementsByTagName('SellingStatus')[0]
+    result['price'] = getSingleValue(sellingStatusNode, 'CurrentPrice')
+    result['bids'] = getSingleValue(sellingStatusNode, 'BidCount')
+    seller = response.getElementsByTagName('Seller')
+    result['feedback'] = getSingleValue(seller[0], 'FeedbackScore')
+    attributeSet = response.getElementsByTagName('Attribute')
+    attributes = {}
+    for att in attributeSet:
+        attID = att.attributes.getNamedItem('attributeID').nodeValue
+        attValue = getSingleValue(att, 'ValueLiteral')
+        attributes[attID] = attValue
+    result['attributes'] = attributes
+    return result
