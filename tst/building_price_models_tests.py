@@ -106,3 +106,7 @@ class BuildingPriceModelTest(unittest.TestCase):
     def testCumulativegrph(self):
         data = numpredict.wineset3()
         numpredict.cumulativegraph(data, (1, 1), 60)
+
+    def testProbabilitygraph(self):
+        data = numpredict.wineset3()
+        numpredict.probabilitygraph(data, (1, 1), 100)
