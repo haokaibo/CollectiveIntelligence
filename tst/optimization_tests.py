@@ -30,6 +30,12 @@ class OptimizationTest(unittest.TestCase):
         logging.info(schedulecost(s))
         printschedule(s)
 
+    def testHillclimb(self):
+        domain = [(0, 8) * (len(people) * 2)]
+        s = hillclimb(domain)
+        logging.info(schedulecost(s))
+        printschedule(s)
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
