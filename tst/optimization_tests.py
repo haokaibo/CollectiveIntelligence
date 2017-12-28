@@ -7,6 +7,7 @@ import logging
 
 from optimization.optimization import *
 
+
 class OptimizationTest(unittest.TestCase):
     def setUp(self):
         logging.basicConfig(level=logging.INFO)
@@ -22,6 +23,13 @@ class OptimizationTest(unittest.TestCase):
     def testPrintfschedule(self):
         s = [1, 4, 3, 2, 7, 3, 6, 3, 2, 4, 5, 3]
         printschedule(s)
+
+    def testRandomoptimize(self):
+        domain = [(0, 8) * (len(people) * 2)]
+        s = randomoptimize(domain, schedulecost)
+        logging.info(schedulecost(s))
+        printschedule(s)
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
