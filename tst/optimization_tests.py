@@ -36,8 +36,8 @@ class OptimizationTest(unittest.TestCase):
         printschedule(s)
 
     def testHillclimb(self):
-        domain = [(0, 8) * (len(people) * 2)]
-        s = hillclimb(domain)
+        domain = [(0, 8)] * (len(people) * 2)
+        s = hillclimb(domain, schedulecost)
         logging.info(schedulecost(s))
         printschedule(s)
 

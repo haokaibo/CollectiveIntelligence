@@ -96,9 +96,9 @@ def hillclimb(domain, costf):
         neighbors = []
         for j in range(len(domain)):
             # One away in each direction
-            if sol[j] > domain[j][0]:
+            if sol[j] >= domain[j][0] and sol[j] < domain[j][1]:
                 neighbors.append(sol[0:j] + [sol[j] + 1] + sol[j + 1:])
-            if sol[j] < domain[j][1]:
+            if sol[j] <= domain[j][1] and sol[j] > domain[j][0]:
                 neighbors.append(sol[0:j] + [sol[j] - 1] + sol[j + 1:])
         # See what the best solution amongst the neighbors is
         current = costf(sol)
