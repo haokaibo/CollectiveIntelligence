@@ -24,8 +24,13 @@ class OptimizationTest(unittest.TestCase):
         s = [1, 4, 3, 2, 7, 3, 6, 3, 2, 4, 5, 3]
         printschedule(s)
 
+    def testSchedulecost(self):
+        s = [1, 4, 3, 2, 7, 3, 6, 3, 2, 4, 5, 3]
+        cost = schedulecost(s)
+        logging.info("cost=%d" % cost)
+
     def testRandomoptimize(self):
-        domain = [(0, 8) * (len(people) * 2)]
+        domain = [(0, 8)] * (len(people) * 2)
         s = randomoptimize(domain, schedulecost)
         logging.info(schedulecost(s))
         printschedule(s)
