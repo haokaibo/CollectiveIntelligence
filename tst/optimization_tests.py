@@ -47,6 +47,11 @@ class OptimizationTest(unittest.TestCase):
         logging.info("cost=%d", schedulecost(s))
         printschedule(s)
 
+    def testGeneticoptimize(self):
+        domain = [(0, 8)] * (len(people) * 2)
+        s = geneticoptimize(domain, satchedulecost)
+        printschedule(s)
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
