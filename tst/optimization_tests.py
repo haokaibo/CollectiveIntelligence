@@ -5,6 +5,8 @@ import os
 import optimization
 import logging
 
+from optimization import dorm
+from optimization.dorm import printsolution, domain, dormcost
 from optimization.optimization import *
 
 
@@ -49,9 +51,21 @@ class OptimizationTest(unittest.TestCase):
 
     def testGeneticoptimize(self):
         domain = [(0, 8)] * (len(people) * 2)
-        s = geneticoptimize(domain, satchedulecost)
+        s = geneticoptimize(domain, schedulecost)
         printschedule(s)
 
+    # ### dorm test ###
+
+    def testPrintSolution(self):
+        printsolution([0,0,0,0,0,0,0,0,0,0])
+
+    def testDormcost(self):
+        s= randomoptimize(domain, dormcost)
+        dormcost(s)
+        printschedule(s)
+
+        s= geneticoptimize(domain, dormcost)
+        printsolution(s)
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
