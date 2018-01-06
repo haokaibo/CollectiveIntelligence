@@ -1,3 +1,4 @@
+import logging
 import random
 import math
 
@@ -39,14 +40,20 @@ def printsolution(vec):
 def dormcost(vec):
     cost = 0
     # Create list a of slots
-    slots = [0, 0, 1, 1, 2, 2, 3, 3, 4, 4]
+    slots = []
+    for i in range(len(dorms) * 2):
+        if i > 0 & (i % 2) == 1:
+            slots.append((i - 1) / 2)
+        else:
+            slots.append(i / 2)
+
+    # [6, 7, 0, 0, 0, 2, 3, 0, 1, 0]
+    # [0, 0, 1, 1, 2, 2, 3, 3, 4, 4]
+
     # Loop over each student
     for i in range(len(vec)):
         x = int(vec[i])
-        if x < 0 or x >= len(slots):
-            print("out of index of slots. x=%d, length of slots=%d, i=%d" % (x, len(slots), i))
-            slot = slots[0]
-        else: slot = slots[x]
+        slot = slots[x]
         dorm = dorms[slot]
         pref = prefs[i][1]
         # First choice costs 0, second choice costs 1
@@ -57,9 +64,8 @@ def dormcost(vec):
         else:
             cost += 3
         # Not on the list costs 3
+
         # Remove selected slot
-        if x < 0 or x >= len(slots):
-            del slots[0]
-        else: del slots[x]
+        del slots[x]
 
     return cost

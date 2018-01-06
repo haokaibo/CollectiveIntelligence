@@ -18,6 +18,7 @@ class OptimizationTest(unittest.TestCase):
             os.makedirs(self.base_dir)
 
         load_data_from_file(os.path.join(self.base_dir, 'optimization', 'schedule.txt'))
+        domain = [(0, 8)] * (len(people) * 2)
 
     def tearDown(self):
         pass
@@ -32,40 +33,51 @@ class OptimizationTest(unittest.TestCase):
         logging.info("cost=%d" % cost)
 
     def testRandomoptimize(self):
-        domain = [(0, 8)] * (len(people) * 2)
         s = randomoptimize(domain, schedulecost)
         logging.info(schedulecost(s))
         printschedule(s)
 
     def testHillclimb(self):
-        domain = [(0, 8)] * (len(people) * 2)
         s = hillclimb(domain, schedulecost)
         logging.info(schedulecost(s))
         printschedule(s)
 
     def testAnnealingoptimize(self):
-        domain = [(0, 8)] * (len(people) * 2)
         s = annealingoptimize(domain, schedulecost)
         logging.info("cost=%d", schedulecost(s))
         printschedule(s)
 
     def testGeneticoptimize(self):
-        domain = [(0, 8)] * (len(people) * 2)
         s = geneticoptimize(domain, schedulecost)
         printschedule(s)
+
+
+
+class DormTest(unittest.TestCase):
+    def setUp(self):
+        logging.basicConfig(level=logging.INFO)
+        self.base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_data')
+        if not os.path.exists(self.base_dir):
+            os.makedirs(self.base_dir)
+
+        load_data_from_file(os.path.join(self.base_dir, 'optimization', 'schedule.txt'))
+
+    def tearDown(self):
+        pass
 
     # ### dorm test ###
 
     def testPrintSolution(self):
-        printsolution([0,0,0,0,0,0,0,0,0,0])
+        printsolution([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def testDormcost(self):
-        s= randomoptimize(domain, dormcost)
-        dormcost(s)
-        printschedule(s)
-
-        s= geneticoptimize(domain, dormcost)
+        s = randomoptimize(dorm.domain, dormcost)
+        logging.info("s=%s" % s)
+        logging.info('dorm cost=%d' % dormcost(s))
         printsolution(s)
+
+        #s = geneticoptimize(dorm.domain, dormcost)
+        #printsolution(s)
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
