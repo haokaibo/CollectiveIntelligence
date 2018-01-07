@@ -73,10 +73,10 @@ def schedulecost(sol):
     return totalprice + totalwait
 
 
-def randomoptimize(domain, costf):
+def randomoptimize(domain, costf, times=1000):
     best = 999999999
     bestr = None
-    for i in range(1000):
+    for i in range(times):
         # Create a random solution
         r = [random.randint(domain[i][0], domain[i][1]) for i in range(len(domain))]  # Get the cost
         cost = costf(r)

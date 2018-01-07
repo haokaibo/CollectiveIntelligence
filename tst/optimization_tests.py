@@ -5,9 +5,10 @@ import os
 import optimization
 import logging
 
-from optimization import dorm
+from optimization import dorm, socialnetwork
 from optimization.dorm import printsolution, domain, dormcost
 from optimization.optimization import *
+from optimization.socialnetwork import drawnetwork
 
 
 class OptimizationTest(unittest.TestCase):
@@ -52,15 +53,12 @@ class OptimizationTest(unittest.TestCase):
         printschedule(s)
 
 
-
 class DormTest(unittest.TestCase):
     def setUp(self):
         logging.basicConfig(level=logging.INFO)
         self.base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_data')
         if not os.path.exists(self.base_dir):
             os.makedirs(self.base_dir)
-
-        load_data_from_file(os.path.join(self.base_dir, 'optimization', 'schedule.txt'))
 
     def tearDown(self):
         pass
@@ -76,8 +74,34 @@ class DormTest(unittest.TestCase):
         logging.info('dorm cost=%d' % dormcost(s))
         printsolution(s)
 
-        #s = geneticoptimize(dorm.domain, dormcost)
-        #printsolution(s)
+        # s = geneticoptimize(dorm.domain, dormcost)
+        # printsolution(s)
+
+
+class SocialnetworkTest(unittest.TestCase):
+    def setUp(self):
+        logging.basicConfig(level=logging.INFO)
+        self.base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_data')
+        if not os.path.exists(self.base_dir):
+            os.makedirs(self.base_dir)
+
+    def tearDown(self):
+        pass
+
+    def testSocialNetwork(self):
+        sol = randomoptimize(socialnetwork.domain, socialnetwork.crosscount, times=1)
+        logging.info('randomoptimize cost = %d' % socialnetwork.crosscount(sol))
+
+        sol = annealingoptimize(socialnetwork.domain, socialnetwork.crosscount, step=50, cool=0.99)
+        logging.info('annealingoptimize cost = %d' % socialnetwork.crosscount(sol))
+
+        logging.info('sol=%s' % sol)
+
+    def testDrawngitetwork(self):
+        sol = randomoptimize(socialnetwork.domain, socialnetwork.crosscount, times=1000)
+        logging.info('annealingoptimize cost = %d' % socialnetwork.crosscount(sol))
+        logging.info('sol=%s' % sol)
+        drawnetwork(sol)
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
