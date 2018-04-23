@@ -31,7 +31,7 @@ def getaddressdata(address, city):
 
 def getpricelist(addresslist_file_path):
     l1 = []
-    for line in file(addresslist_file_path):
+    for line in open(addresslist_file_path, 'r'):
         data = getaddressdata(line.strip(), 'Cambridge,MA')
         l1.append(data)
     return l1
