@@ -15,3 +15,9 @@ class AdvancedClassifyTest(unittest.TestCase):
         agesonly = loadmatch(os.path.join(self.base_dir, 'agesonly.csv'), allnum=True)
         matchmaker = loadmatch(os.path.join(self.base_dir, 'matchmaker.csv'))
         plot_age_matches(agesonly)
+        print('OK')
+
+    def test_lineartrain(self):
+        agesonly = loadmatch(os.path.join(self.base_dir, 'agesonly.csv'), allnum=True)
+        r = lineartrain(agesonly)
+        logging.info(r)
