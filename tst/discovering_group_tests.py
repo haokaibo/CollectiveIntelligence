@@ -20,7 +20,8 @@ class GenerateFeedVectorTest(unittest.TestCase):
     def test_group_text_with_keywords(self):
         apcount = {}
         wordcounts = {}
-        feedlist = [line for line in file(os.path.join(self.base_dir, 'feedlist.txt'))]
+        f = open(os.path.join(self.base_dir, 'feedlist.txt'))
+        feedlist = [line for line in f]
         for feedurl in feedlist:
             try:
                 title, wc = getwordcounts(feedurl)
@@ -30,7 +31,7 @@ class GenerateFeedVectorTest(unittest.TestCase):
                     if count > 1:
                         apcount[word] += 1
             except:
-                print 'Failed to parse feed %s' % feedurl
+                print('Failed to parse feed %s' % feedurl)
 
         wordlist = []
         for w, bc in apcount.items():
@@ -39,7 +40,7 @@ class GenerateFeedVectorTest(unittest.TestCase):
                 wordlist.append(w)
 
         output_path = os.path.join(self.base_dir, 'blogdata1.txt')
-        out = file(output_path, 'w')
+        out = open(output_path, 'w')
         out.write('Blog')
         for word in wordlist: out.write('\t%s' % word)
         out.write('\n')
