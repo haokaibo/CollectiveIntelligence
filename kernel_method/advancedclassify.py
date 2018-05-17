@@ -53,8 +53,26 @@ def lineartrain(rows):
         counts[cl] += 1
 
     # Divide sums by counts to get the averages
-    for cl,avg in averages.items():
+    for cl, avg in averages.items():
         for i in range(len(avg)):
             avg[i] /= counts[cl]
 
     return averages
+
+
+def dotproduct(v1, v2):
+    return sum([v1[i] * v2[i] for i in range(len(v1))])
+
+
+def dpclassify(point, avgs):
+    '''
+    :param point:
+    :param avgs:
+    :return:
+    '''
+    b = (dotproduct(avgs[1], avgs[1]) - dotproduct(avgs[0], avgs[0])) / 2
+    y = dotproduct(point, avgs[0]) - dotproduct(point, avgs[1]) + b
+    if y > 0:
+        return 0
+    else:
+        return 1

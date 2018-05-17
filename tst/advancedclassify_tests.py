@@ -21,3 +21,11 @@ class AdvancedClassifyTest(unittest.TestCase):
         agesonly = loadmatch(os.path.join(self.base_dir, 'agesonly.csv'), allnum=True)
         r = lineartrain(agesonly)
         logging.info(r)
+
+    def test_dpclassify(self):
+        agesonly = loadmatch(os.path.join(self.base_dir, 'agesonly.csv'), allnum=True)
+        avgs = lineartrain(agesonly)
+        logging.info(dpclassify([30, 30], avgs))
+        logging.info(dpclassify([30, 25], avgs))
+        logging.info(dpclassify([25, 40], avgs))
+        logging.info(dpclassify([48, 20], avgs))
