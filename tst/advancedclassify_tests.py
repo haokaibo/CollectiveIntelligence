@@ -29,3 +29,6 @@ class AdvancedClassifyTest(unittest.TestCase):
         logging.info(dpclassify([30, 25], avgs))
         logging.info(dpclassify([25, 40], avgs))
         logging.info(dpclassify([48, 20], avgs))
+
+    def test_getlocation(self):
+        logging.info(getlocation('1 alewife center, cambridge, ma'))

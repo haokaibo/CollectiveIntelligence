@@ -2,6 +2,11 @@ import os
 
 from matplotlib.pyplot import plot
 
+from xml.dom.minidom import parseString
+from urllib import urlopen, quote_plus
+
+bing_map_key = 'xxx'
+
 
 class matchrow:
     def __init__(self, row, allnum=False):
@@ -76,3 +81,51 @@ def dpclassify(point, avgs):
         return 0
     else:
         return 1
+
+
+def yesno(v):
+    if v == 'yes':
+        return 1
+    elif v == 'no':
+        return -1
+    else:
+        return 0
+
+
+def matchcount(interest1, interest2):
+    l1 = interest1.split(':')
+    l2 = interest2.split(':')
+    x = 0
+    for v in l1:
+        if v in l2: x += 1
+    return x
+
+
+def milesdistance(a1, a2):
+    return 0
+
+
+loc_cache = {}
+
+
+def getlocation(address):
+    if address in loc_cache:
+        return loc_cache[address]
+    q = 'http://dev.virtualearth.net/REST/v1/Locations/%s?o=xml&key=%s' % (quote_plus(address), bing_map_key)
+
+    data = urlopen(q).read()
+    data = data[data.find('\r\n') + 2:]
+    data = data[0:data.find('\r\n')]
+    doc = parseString(data)
+    lat = doc.getElementsByTagName('Latitude')[0].firstChild.nodeValue
+    long = doc.getElementsByTagName('Longitude')[0].firstChild.nodeValue
+    loc_cache[address] = (float(lat), float(long))
+    return loc_cache[address]
+
+
+def milesdistance(a1, a2):
+    lat1, long1 = getlocation(a1)
+    lat2, long2 = getlocation(a2)
+    latdif = 69.1 * (lat2 - lat1)
+    longdif = 53.0 * (long2 - long1)
+    return (latdif ** 2 + longdif ** 2) ** .5
