@@ -1,4 +1,5 @@
 import logging
+import json
 import os
 import unittest
 from advancedclassify import *
@@ -31,4 +32,25 @@ class AdvancedClassifyTest(unittest.TestCase):
         logging.info(dpclassify([48, 20], avgs))
 
     def test_getlocation(self):
-        logging.info(getlocation('1 alewife center, cambridge, ma'))
+        file = open(os.path.join(self.base_dir, 'bing_conf'))
+        content = file.read()
+        bing_map_key = json.loads(content)['bing_map_key']
+        logging.info(getlocation('1 alewife center, cambridge, ma', bing_map_key))
+
+    def test_milesdistance(self):
+        logging.info(milesdistance('cambridge, ma', 'new york,ny'))
+
+    def loadnumerical(self):
+        oldrows = loadmatch(os.path.join(self.base_dir, 'matchmaker.csv'))
+
+        newrows = []
+        for row in oldrows:
+            d = row.data
+            data = [float(d[0]), yesno(d[1]), yesno(d[2]),
+                    float(d[5]), yesno(d[6]), yesno(d[7]),
+                    matchcount(d[3], d[8]),
+                    milesdistance(d[4], d[9]),
+                    row.match]
+            newrows.append(matchrow(data))
+        return newrows
+

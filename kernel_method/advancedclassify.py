@@ -5,7 +5,6 @@ from matplotlib.pyplot import plot
 from xml.dom.minidom import parseString
 from urllib import urlopen, quote_plus
 
-bing_map_key = 'xxx'
 
 
 class matchrow:
@@ -108,7 +107,8 @@ def milesdistance(a1, a2):
 loc_cache = {}
 
 
-def getlocation(address):
+def getlocation(address, bing_map_key):
+    # read the bing map key
     if address in loc_cache:
         return loc_cache[address]
     q = 'http://dev.virtualearth.net/REST/v1/Locations/%s?o=xml&key=%s' % (quote_plus(address), bing_map_key)
@@ -129,3 +129,24 @@ def milesdistance(a1, a2):
     latdif = 69.1 * (lat2 - lat1)
     longdif = 53.0 * (long2 - long1)
     return (latdif ** 2 + longdif ** 2) ** .5
+
+def scaledata(rows):
+    low = [999999999.0] * len(rows[0].data)
+    high = [-999999999.0] * len(rows[0].data)
+    # Find the lowest and highest values
+    for row in rows:
+        d = row.data
+        for i in range(len(d)):
+            if d[i] < low[i]: low[i] = d[i]
+            if d[i] > high[i]: high[i] = d[i]
+
+    # Create a function that scales data
+    def scaleinput(d):
+        return [(d.data[i] - low[i]) / (high[i] - low[i])
+                for i in range(len(low))]
+
+    # Scale all the data
+    newrows = [matchrow(scaleinput(row.data) + [row.match])
+               for row in rows]
+    # Return the new data and the function
+    return newrows, scaleinput
