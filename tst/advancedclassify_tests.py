@@ -63,9 +63,9 @@ class AdvancedClassifyTest(unittest.TestCase):
             for row in csv_reader:
                 match_row = matchrow(map(float, row))
                 num_rows.append(match_row)
-        if len(num_rows)> 0:
-            scaled_rows, scaleinput = scaledata(num_rows)
 
+        if len(num_rows) > 0:
+            scaled_rows, scaleinput = scaledata(num_rows)
             scaled_matchmaker_file_path = os.path.join(self.base_dir, 'scaled_matchmaker.csv')
             with open(scaled_matchmaker_file_path, 'w') as scaled_file:
                 csv_writer = writer(scaled_file)
@@ -74,3 +74,32 @@ class AdvancedClassifyTest(unittest.TestCase):
                         csv_writer.writerow(row.data + [row.match])
                     except Exception:
                         print('str_scaled_row_data=%s', row.data)
+
+    def test_classify_by_scaled_data(self):
+        # load high and low from the numerical data
+        numerical_matchmaker_file_path = os.path.join(self.base_dir, 'numerical_matchmaker.csv')
+        # low = [999999999.0] * 7
+        # high = [-999999999.0] * 7
+
+        numerical_rows = []
+        with open(numerical_matchmaker_file_path) as numerical_file:
+            csv_reader = reader(numerical_file)
+            for row in csv_reader:
+                row = map(float, row)
+                numerical_rows.append(matchrow(map(float, row)))
+                # for i in range(len(row) - 1):
+                #     if row[i] < low[i]: low[i] = row[i]
+                #     if row[i] > high[i]: high[i] = row[i]
+
+        scaledset, scalef = scaledata(numerical_rows)
+        avgs = lineartrain(scaledset)
+
+        print(numerical_rows[0].data)
+        print('match=%s' % numerical_rows[0].match)
+        scalefed = scalef(numerical_rows[0])
+        print(dpclassify(scalefed[0: len(scalefed) - 1], avgs))
+
+        print(numerical_rows[11].data)
+        print('match=%s' % numerical_rows[11].match)
+        scalefed = scalef(numerical_rows[11])
+        print(dpclassify(scalefed[0: len(scalefed) - 1], avgs))
