@@ -3,7 +3,7 @@ import json
 import os
 import unittest
 from advancedclassify import *
-from csv import writer
+from csv import writer, reader
 
 
 class AdvancedClassifyTest(unittest.TestCase):
@@ -48,9 +48,29 @@ class AdvancedClassifyTest(unittest.TestCase):
         numerical_matchmaker_file_path = os.path.join(self.base_dir, 'numerical_matchmaker.csv')
 
         with open(numerical_matchmaker_file_path, 'w') as num_file:
-            file_writer = writer(num_file)
+            csv_writer = writer(num_file)
             for row in newrows:
                 try:
-                    file_writer.writerow(row.data + [row.match])
+                    csv_writer.writerow(row.data + [row.match])
                 except Exception:
                     print('str_row_data=%s', row.data)
+
+    def test_scaledata(self):
+        numerical_matchmaker_file_path = os.path.join(self.base_dir, 'numerical_matchmaker.csv')
+        with open(numerical_matchmaker_file_path, 'r') as num_file:
+            csv_reader = reader(num_file)
+            num_rows = []
+            for row in csv_reader:
+                match_row = matchrow(map(float, row))
+                num_rows.append(match_row)
+        if len(num_rows)> 0:
+            scaled_rows, scaleinput = scaledata(num_rows)
+
+            scaled_matchmaker_file_path = os.path.join(self.base_dir, 'scaled_matchmaker.csv')
+            with open(scaled_matchmaker_file_path, 'w') as scaled_file:
+                csv_writer = writer(scaled_file)
+                for row in scaled_rows:
+                    try:
+                        csv_writer.writerow(row.data + [row.match])
+                    except Exception:
+                        print('str_scaled_row_data=%s', row.data)

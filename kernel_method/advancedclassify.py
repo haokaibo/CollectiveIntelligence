@@ -164,7 +164,6 @@ def scaledata(rows):
                 for i in range(len(low))]
 
     # Scale all the data
-    newrows = [matchrow(scaleinput(row.data) + [row.match])
-               for row in rows]
+    newrows = [matchrow(scaleinput(row)) for row in rows]
     # Return the new data and the function
     return newrows, scaleinput
