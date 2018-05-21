@@ -6,7 +6,6 @@ from xml.dom.minidom import parseString
 from urllib import urlopen, quote_plus
 
 
-
 class matchrow:
     def __init__(self, row, allnum=False):
         row_len = len(row)
@@ -100,10 +99,6 @@ def matchcount(interest1, interest2):
     return x
 
 
-def milesdistance(a1, a2):
-    return 0
-
-
 loc_cache = {}
 
 
@@ -116,19 +111,42 @@ def getlocation(address, bing_map_key):
     data = urlopen(q).read()
     data = data[data.find('\r\n') + 2:]
     data = data[0:data.find('\r\n')]
-    doc = parseString(data)
+
+    try:
+        doc = parseString(data)
+    except Exception:
+        print('data=%s, address=%s' % (data, address))
+        loc_cache[address] = (0, 0)
+        return loc_cache[address]
+
     lat = doc.getElementsByTagName('Latitude')[0].firstChild.nodeValue
     long = doc.getElementsByTagName('Longitude')[0].firstChild.nodeValue
     loc_cache[address] = (float(lat), float(long))
     return loc_cache[address]
 
 
-def milesdistance(a1, a2):
-    lat1, long1 = getlocation(a1)
-    lat2, long2 = getlocation(a2)
+def milesdistance(a1, a2, bing_map_key):
+    lat1, long1 = getlocation(a1, bing_map_key)
+    lat2, long2 = getlocation(a2, bing_map_key)
     latdif = 69.1 * (lat2 - lat1)
     longdif = 53.0 * (long2 - long1)
     return (latdif ** 2 + longdif ** 2) ** .5
+
+
+def loadnumerical(origin_data_file, bing_map_key):
+    oldrows = loadmatch(origin_data_file)
+    newrows = []
+
+    for row in oldrows:
+        d = row.data
+        data = [float(d[0]), yesno(d[1]), yesno(d[2]),
+                float(d[5]), yesno(d[6]), yesno(d[7]),
+                matchcount(d[3], d[8]),
+                milesdistance(d[4], d[9], bing_map_key),
+                row.match]
+        newrows.append(matchrow(data))
+    return newrows
+
 
 def scaledata(rows):
     low = [999999999.0] * len(rows[0].data)
