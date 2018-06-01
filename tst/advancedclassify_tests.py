@@ -2,12 +2,15 @@ import logging
 import json
 import os
 import unittest
+from collections import namedtuple
+
 from advancedclassify import *
 from csv import writer, reader
 
 
 class AdvancedClassifyTest(unittest.TestCase):
     def setUp(self):
+        a = namedtuple('a', [])
         logging.basicConfig(level=logging.INFO)
         self.base_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_data', 'matchmaker')
         if not os.path.exists(self.base_dir):
